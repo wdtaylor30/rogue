@@ -133,7 +133,7 @@ Room* createRoom (int y, int x, int height, int width)
 	/* Bottom door */
 	srand(time(NULL));
 	newRoom->door[0].y = newRoom->position.y;
-	nweRoom->door[0].x = rand() % width;
+	newRoom->door[0].x = rand() % width;
 	
 	return newRoom;	
 }//end method
