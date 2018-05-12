@@ -1,8 +1,8 @@
 #if 0
 William Daniel Taylor
 5.7.18
-The beginnings of a roguelike RPG...
-Resume at Part VI 4:37
+Rewrite if possible...
+Start at VI 8:36
 #endif
 
 /* When compiling, use -lncurses and -std=c99 flags */
@@ -33,7 +33,7 @@ typedef struct Room
 	int width;
 	
 	//doors
-	Position door[4];
+	Position** doors;
 }Room;
 
 //environment building
@@ -125,16 +125,29 @@ Room* createRoom (int y, int x, int height, int width)
 	newRoom->height = height;
 	newRoom->width = width;
 	
-	/* Top door */
 	srand(time(NULL));
-	newRoom->door[0].y = newRoom->position.y;
-	newRoom->door[0].x = rand() % width;
+	
+	newRoom->doors = malloc(sizeof(Position) * 4);
+	
+	/* Top door */
+	newRoom->doors[0] = malloc(sizeof(Position));
+	newRoom->doors[0]->x = rand() % width + newRoom->position.x;
+	newRoom->doors[0]->y = newRoom->position.y;
 	
 	/* Bottom door */
-	srand(time(NULL));
-	newRoom->door[0].y = newRoom->position.y;
-	newRoom->door[0].x = rand() % width;
+	newRoom->doors[1] = malloc(sizeof(Position));
+	newRoom->doors[1]->x = rand() % width + newRoom->position.x;
+	newRoom->doors[1]->y = newRoom->position.y + newRoom->height;
 	
+	/*Left door */
+	newRoom->doors[2] = malloc(sizeof(Position));
+	newRoom->doors[2]->y = rand() % height + newRoom->position.y;
+	newRoom->doors[2]->x = newRoom->position.x;
+	
+	/* Right door */
+	newRoom->doors[3] = malloc(sizeof(Position));
+	newRoom->doors[3]->y = rand() % height + newRoom->position.y;
+	newRoom->doors[3]->x = newRoom->position.x + width;
 	return newRoom;	
 }//end method
 
@@ -163,6 +176,16 @@ void drawRoom(Room* room)
 			//floors
 			mvprintw(y, x, ".");
 		}//end nested for
+	}//end for
+	
+	//draw doors
+	//~ mvprintw(room->doors[0]->y, room->doors[0]->x, "+");
+	//~ mvprintw(room->doors[1]->y, room->doors[1]->x, "+");
+	//~ mvprintw(room->doors[2]->y, room->doors[2]->x, "+");
+	//~ mvprintw(room->doors[3]->y, room->doors[3]->x, "+");
+	for (int i = 0; i <= 3; i++)
+	{
+		mvprintw(room->doors[i]->y, room->doors[i]->x, "+");
 	}//end for
 }//end method
 
